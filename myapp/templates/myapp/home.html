@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content-section">
+    
+    {% if tasks == None %}
+        <h2 class="text-center">Seems there are no Tasks in your bucket, please add a Todo</h2>
+
+    {% else %}
+        <h2 class="text-center">Things ToDo</h2>
+    {% endif %}
+    
+    <ul>
+    {% for task in tasks %}
+        <div class="todo-item mt-4">
+            <h2>{{task}}</h2>
+            <small>
+            STATUS:
+            {% if task.status == "Pending" %}
+            <span class="{% if task.status %}status-pending{% endif %}">Pending</span> 
+            {% else %}
+            <span class="{% if task.status %}status-completed{% endif %}">Completed</span> 
+            {% endif %}
+
+            | Actions: <a href="{% url 'todo-update' task.id %}" class="edit-todo"><span class="oi oi-pencil"> Edit</span></a>
+            <a href="{% url 'todo-completed' task.id %}" class="mark-todo"><span class="oi oi-check"> Mark as completed</span></a>
+            | Due Date: <span class="oi oi-clock due-date"> {{task.due_date}}</span>
+            </small>
+            <br /><br />
+            <p>{{task.description}}</p>
+        </div>
+    {% endfor %}
+    </ul>
+</div>
+
+{% if completed_tasks %}
+<div class="content-section">
+        <h2 class="text-center">Completed Tasks</h2>
+    
+    <ul>
+    {% for task in completed_tasks %}
+        <div class="todo-item mt-4">
+            <h2>{{task}}</h2>
+            <small>
+            STATUS:
+            {% if task.status == "Completed" %}
+            <span class="{% if task.status %}status-completed{% endif %}">Completed</span> 
+            {% else %}
+            <span class="{% if task.status %}status-pending{% endif %}">Pending</span> 
+            {% endif %}
+
+            | Actions: <a href="{% url 'todo-update' task.id %}" class="edit-todo"><span class="oi oi-pencil"> Edit</span></a>
+            </small>
+            <br /><br />
+            <p>{{task.description}}</p>
+        </div>
+    {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+
+{% endblock %}
