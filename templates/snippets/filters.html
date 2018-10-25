@@ -1,0 +1,12 @@
+<div class="content-section">
+  <h3><span class="oi oi-sort-descending"></span>Due Date Filters</h3>
+  <p class='text-muted'>Know which todos are close to Due Date
+    <ul class="list-group">
+        {% if filters %}
+            {% for filter in filters %}
+              <a href="?filter={{filter}}" class="filter-item-links"><li class="list-group-item list-group-item-light">{{filter}}</li></a>
+            {% endfor %}
+        {% endif %}
+    </ul>
+  </p>
+</div>

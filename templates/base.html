@@ -32,29 +32,8 @@
       {% block content %}{% endblock %}
     </div>
     <div class="col-md-4">
-      <div class="content-section">
-        <h3>Alerts</h3>
-        <p class='text-muted'>Here you see the alerts of your to-dos:
-          <ul class="list-group">
-            <li class="list-group-item list-group-item-light">Latest Posts</li>
-            <li class="list-group-item list-group-item-light">Announcements</li>
-            <li class="list-group-item list-group-item-light">Calendars</li>
-            <li class="list-group-item list-group-item-light">etc</li>
-          </ul>
-        </p>
-      </div>
-
-      <div class="content-section">
-        <h3>Filters</h3>
-        <p class='text-muted'>Here you can get your to-dos based on:
-          <ul class="list-group">
-            <li class="list-group-item list-group-item-light">Latest Posts</li>
-            <li class="list-group-item list-group-item-light">Announcements</li>
-            <li class="list-group-item list-group-item-light">Calendars</li>
-            <li class="list-group-item list-group-item-light">etc</li>
-          </ul>
-        </p>
-      </div>
+        {% include 'snippets/alerts.html' %}
+        {% include 'snippets/filters.html' %}
     </div>
   </div>
 </main>

@@ -1,19 +1,20 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% if pending_tasks %}
 <div class="content-section">
+    {% if pending_tasks == None %}
     
-    {% if tasks == None %}
-        <h2 class="text-center">Seems there are no Tasks in your bucket, please add a Todo</h2>
+    <h2 class="text-center">Seems there are no Tasks in your bucket, please add a Todo</h2>
 
     {% else %}
         <h2 class="text-center">Things ToDo</h2>
     {% endif %}
     
     <ul>
-    {% for task in tasks %}
+    {% for task in pending_tasks %}
         <div class="todo-item mt-4">
-            <h2>{{task}}</h2>
+            <h2>{{task}}</h2> <div class="status-div"></div>
             <small>
             STATUS:
             {% if task.status == "Pending" %}
@@ -24,7 +25,7 @@
 
             | Actions: <a href="{% url 'todo-update' task.id %}" class="edit-todo"><span class="oi oi-pencil"> Edit</span></a>
             <a href="{% url 'todo-completed' task.id %}" class="mark-todo"><span class="oi oi-check"> Mark as completed</span></a>
-            | Due Date: <span class="oi oi-clock due-date"> {{task.due_date}}</span>
+            | Due Date: <span class="oi oi-calendar due-date"> {{task.due_date}}</span>
             </small>
             <br /><br />
             <p>{{task.description}}</p>
@@ -32,6 +33,7 @@
     {% endfor %}
     </ul>
 </div>
+{% endif %}
 
 {% if completed_tasks %}
 <div class="content-section">
@@ -40,7 +42,7 @@
     <ul>
     {% for task in completed_tasks %}
         <div class="todo-item mt-4">
-            <h2>{{task}}</h2>
+            <h2>{{task}}</h2> <div class="status-div"></div>
             <small>
             STATUS:
             {% if task.status == "Completed" %}
@@ -59,5 +61,28 @@
 </div>
 {% endif %}
 
+{% if filtered_tasks %}
+<div class="content-section">
+    <h2>Filtered Tasks</h1>
+    {% for filtered_task in filtered_tasks %}
+        <div class="todo-item mt-4">
+            <h2>{{filtered_task}}</h2> 
+            <small>
+            STATUS:
+            {% if filtered_task == "Completed" %}
+            <span class="{% if filtered_task.status %}status-completed{% endif %}">Completed</span> 
+            {% else %}
+            <span class="{% if filtered_task.status %}status-pending{% endif %}">Pending</span> 
+            {% endif %}
+
+            | Actions: <a href="{% url 'todo-update' filtered_task.id %}" class="edit-todo"><span class="oi oi-pencil"> Edit</span></a>
+            | Due Date: <span class="oi oi-calendar due-date"> {{filtered_task.due_date}}</span>
+            </small>
+            <br /><br />
+            <p>{{filtered_task.description}}</p>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
 
 {% endblock %}

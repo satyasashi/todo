@@ -2,6 +2,7 @@ from django.contrib.admin import widgets
 from django.conf import settings
 from django import forms
 from .models import Task
+import datetime
 
 PENDING=[('Pending','Pending')]
 COMPLETED=[('Completed','Completed')]
@@ -12,7 +13,7 @@ STATUS = [('Pending','Pending'), ('Completed', 'Completed')]
 class TodoForm(forms.ModelForm):
     # title = forms.CharField(max_length=100, widget=forms.TextInput())
     # description = forms.CharField(widget=forms.Textarea)
-    due_date = forms.DateField(input_formats=settings.DATE_INPUT_FORMATS, widget=widgets.AdminDateWidget(attrs={'id': 'datetimepicker'}))
+    due_date = forms.DateTimeField(input_formats=settings.DATE_INPUT_FORMATS, label="Due-Date format yyyy-mm-dd", widget=widgets.AdminDateWidget(attrs={'id': 'datetimepicker'}))
     status = forms.ChoiceField(choices=STATUS, widget=forms.RadioSelect())
     class Meta:
         model = Task
