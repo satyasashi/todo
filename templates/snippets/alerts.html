@@ -2,10 +2,11 @@
   <h3>Alerts</h3>
   <p class='text-muted'>Here you see the alerts of your to-dos:
     <ul class="list-group">
-      <li class="list-group-item list-group-item-light">Latest Posts</li>
-      <li class="list-group-item list-group-item-light">Announcements</li>
-      <li class="list-group-item list-group-item-light">Calendars</li>
-      <li class="list-group-item list-group-item-light">etc</li>
+        {% if task_alerts %}
+            {% for task in task_alerts %}
+              <a href="{% url 'todo-update' task.id %}" class="filter-item-links"><li class="alert-list-item alert alert-danger fade-in">Your task '{{task}}' is about to reach dead line in {{task.notify_me}} Hour(s)</li></a>
+            {% endfor %}
+        {% endif %}
     </ul>
   </p>
 </div>

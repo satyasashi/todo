@@ -42,7 +42,9 @@ INSTALLED_APPS = [
 
     # Third party apps
     'tastypie',
-    'crispy_forms'
+    'crispy_forms',
+    'bootstrap_datepicker_plus',
+    'bootstrap4'
 ]
 
 MIDDLEWARE = [
@@ -105,6 +107,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+BOOTSTRAP4 = {
+    'include_jquery': True,
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
@@ -119,7 +124,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-DATE_INPUT_FORMATS = ['%Y-%m-%d']
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/

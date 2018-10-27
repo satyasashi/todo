@@ -25,7 +25,7 @@
 
             | Actions: <a href="{% url 'todo-update' task.id %}" class="edit-todo"><span class="oi oi-pencil"> Edit</span></a>
             <a href="{% url 'todo-completed' task.id %}" class="mark-todo"><span class="oi oi-check"> Mark as completed</span></a>
-            | Due Date: <span class="oi oi-calendar due-date"> {{task.due_date}}</span>
+            | <b>Due Date:</b> <span class="oi oi-calendar due-date"> {{task.due_date}}</span>
             </small>
             <br /><br />
             <p>{{task.description}}</p>
@@ -52,6 +52,7 @@
             {% endif %}
 
             | Actions: <a href="{% url 'todo-update' task.id %}" class="edit-todo"><span class="oi oi-pencil"> Edit</span></a>
+            | <b>Due Date:</b> <span class="oi oi-calendar due-date"> {{task.due_date}}</span>
             </small>
             <br /><br />
             <p>{{task.description}}</p>
@@ -76,7 +77,7 @@
             {% endif %}
 
             | Actions: <a href="{% url 'todo-update' filtered_task.id %}" class="edit-todo"><span class="oi oi-pencil"> Edit</span></a>
-            | Due Date: <span class="oi oi-calendar due-date"> {{filtered_task.due_date}}</span>
+            | <b>Due Date:</b> <span class="oi oi-calendar due-date"> {{filtered_task.due_date}}</span>
             </small>
             <br /><br />
             <p>{{filtered_task.description}}</p>

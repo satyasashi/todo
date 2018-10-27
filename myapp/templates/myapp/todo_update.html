@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
+{% block sub-head %}
+    {{block.super}}
+    {% load bootstrap4 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript jquery='full' %}
+    {{ form.media }}
+{% endblock %}
 {% block title %}
     Add To-do 
 {% endblock %}

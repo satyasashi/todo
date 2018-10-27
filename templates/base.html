@@ -3,6 +3,7 @@
 <html>
 <head>
     <title>{% block title %}Todo App{% endblock %}</title>
+    {% block sub-head %}
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <!-- JS, Poppper.js, jQuery -->
@@ -14,8 +15,8 @@
     <link href="{% static 'myapp/css/open-iconic-bootstrap.css' %}" rel="stylesheet">
 
     <!-- Date time picker CSS -->
-    <link rel="stylesheet" type="text/css" href="{% static 'js/jquery.datetimepicker.css' %}">
-
+    <!-- <link rel="stylesheet" type="text/css" href="{% static 'js/jquery.datetimepicker.css' %}"> -->
+    {% endblock %}
 </head>
 <body>
 

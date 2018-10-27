@@ -22,6 +22,23 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 
+/*.status-circle-pending {
+    width: 100px;
+    height: 100px;
+    -moz-border-radius: 50px;
+    -webkit-border-radius: 50px;
+    border-radius: 50px;
+    background-color: rgba(239, 23, 23, 0.5)
+}
+
+.status-circle-completed {
+    padding: 5px;
+    border-radius: 50%;
+    background-color: rgba(23, 237, 98, 0.5)
+}
+
+*/
+
 .update-todo {
     padding: 6px 2px;
     border-radius: 2px;
@@ -54,6 +71,10 @@ ul {
 
 .site-header .navbar-nav .nav-link.active {
   font-weight: 500;
+}
+
+.list-group .filter-item-links, .list-group .filter-item-links:hover{
+  text-decoration: none;
 }
 
 .content-section {

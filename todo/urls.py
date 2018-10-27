@@ -16,8 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django import views
 from django.urls import path, include
+from myapp.api import TaskResource
+
+task_resource = TaskResource()
 
 urlpatterns = [
     path('', include('myapp.urls')),
     path('admin/', admin.site.urls),
+    path('api/', include(task_resource.urls))
 ]

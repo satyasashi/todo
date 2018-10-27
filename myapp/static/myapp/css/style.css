@@ -2,11 +2,14 @@
 body {
   background: #fafafa;
   color: #333333;
-  margin-top: 5rem;
 }
 
 h1, h2, h3, h4, h5, h6 {
   color: #444444;
+}
+
+.navbar {
+  margin-bottom: 20px;
 }
 
 .status-pending {
@@ -75,6 +78,10 @@ ul {
 
 .list-group .filter-item-links, .list-group .filter-item-links:hover{
   text-decoration: none;
+}
+
+.list-group .alert-list-item {
+  list-style-type: none; 
 }
 
 .content-section {

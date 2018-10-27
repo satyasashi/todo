@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block sub-head %}
+    {{block.super}}
+    {% load bootstrap4 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript jquery='full' %}
+    {{ form.media }}
+{% endblock %}
 
 {% load crispy_forms_tags %}
 {% block title %}
