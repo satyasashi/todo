@@ -1,8 +1,16 @@
+amqp==2.3.2
+anyjson==0.3.3
+billiard==3.5.0.4
+celery==4.2.1
 Django==2.1.2
 django-bootstrap-datepicker-plus==3.0.5
+django-bootstrap4==0.0.7
+django-celery==3.2.2
 django-crispy-forms==1.7.2
 django-tastypie==0.14.2
+kombu==4.2.1
 python-dateutil==2.7.3
 python-mimeparse==1.6.0
 pytz==2018.5
 six==1.11.0
+vine==1.1.4

@@ -11,12 +11,11 @@
         <h2 class="text-center">Things ToDo</h2>
     {% endif %}
     
-    <ul>
     {% for task in pending_tasks %}
-        <div class="todo-item mt-4">
-            <h2>{{task}}</h2> <div class="status-div"></div>
+        <div class="todo-item mt-4" data-toggle="collapse" data-target="#demo{{task.id}}">
+            <h2 class="task-heading">{{task}}</h2> <div class="status-div"></div>
             <small>
-            STATUS:
+            Status:
             {% if task.status == "Pending" %}
             <span class="{% if task.status %}status-pending{% endif %}">Pending</span> 
             {% else %}
@@ -28,23 +27,22 @@
             | <b>Due Date:</b> <span class="oi oi-calendar due-date"> {{task.due_date}}</span>
             </small>
             <br /><br />
-            <p>{{task.description}}</p>
+            <div id="demo{{task.id}}" class="collapse">
+                <p>{{task.description}}</p>
+            </div>
         </div>
     {% endfor %}
-    </ul>
 </div>
 {% endif %}
 
 {% if completed_tasks %}
 <div class="content-section">
-        <h2 class="text-center">Completed Tasks</h2>
-    
-    <ul>
+    <h2 class="text-center">Completed Tasks</h2>
     {% for task in completed_tasks %}
-        <div class="todo-item mt-4">
-            <h2>{{task}}</h2> <div class="status-div"></div>
+        <div class="todo-item mt-4" data-toggle="collapse" data-target="#demo{{task.id}}">
+            <h2 class="task-heading">{{task}}</h2> <div class="status-div"></div>
             <small>
-            STATUS:
+            Status:
             {% if task.status == "Completed" %}
             <span class="{% if task.status %}status-completed{% endif %}">Completed</span> 
             {% else %}
@@ -55,21 +53,22 @@
             | <b>Due Date:</b> <span class="oi oi-calendar due-date"> {{task.due_date}}</span>
             </small>
             <br /><br />
-            <p>{{task.description}}</p>
+            <div id="demo{{task.id}}" class="collapse">
+                <p>{{task.description}}</p>
+            </div>
         </div>
     {% endfor %}
-    </ul>
 </div>
 {% endif %}
 
 {% if filtered_tasks %}
 <div class="content-section">
-    <h2>Filtered Tasks</h1>
+    <h2>Filtered Tasks for '{{filter_arg}}'</h2>
     {% for filtered_task in filtered_tasks %}
-        <div class="todo-item mt-4">
-            <h2>{{filtered_task}}</h2> 
+        <div class="todo-item mt-4 data-toggle="collapse" data-target="#demo{{filtered_task.id}}">
+            <h2 class="task-heading">{{filtered_task}}</h2> 
             <small>
-            STATUS:
+            Status:
             {% if filtered_task == "Completed" %}
             <span class="{% if filtered_task.status %}status-completed{% endif %}">Completed</span> 
             {% else %}
@@ -80,7 +79,36 @@
             | <b>Due Date:</b> <span class="oi oi-calendar due-date"> {{filtered_task.due_date}}</span>
             </small>
             <br /><br />
-            <p>{{filtered_task.description}}</p>
+            <div id="demo{{filtered_task.id}}" class="collapse">
+                <p>{{filtered_task.description}}</p>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if search_todos %}
+<div class="content-section">
+    <h2 class="text-center">Results for title '{{title_value}}'</h2>
+    {% for search_todo in search_todos %}
+        <div class="todo-item mt-4" data-toggle="collapse" data-target="#demo{{search_todo.id}}">
+            <h2 class="task-heading">{{search_todo}}</h2> <div class="status-div"></div>
+            <small>
+            Status:
+            {% if search_todo.status == "Pending" %}
+            <span class="{% if search_todo.status %}status-pending{% endif %}">Pending</span> 
+            {% else %}
+            <span class="{% if search_todo.status %}status-completed{% endif %}">Completed</span> 
+            {% endif %}
+
+            | Actions: <a href="{% url 'todo-update' search_todo.id %}" class="edit-todo"><span class="oi oi-pencil"> Edit</span></a>
+            <a href="{% url 'todo-completed' search_todo.id %}" class="mark-todo"><span class="oi oi-check"> Mark as completed</span></a>
+            | <b>Due Date:</b> <span class="oi oi-calendar due-date"> {{search_todo.due_date}}</span>
+            </small>
+            <br /><br />
+            <div id="demo{{search_todo.id}}" class="collapse">
+                <p>{{search_todo.description}}</p>
+            </div>
         </div>
     {% endfor %}
 </div>

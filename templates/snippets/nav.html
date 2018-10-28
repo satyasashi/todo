@@ -8,14 +8,17 @@
       <div class="collapse navbar-collapse" id="navbarToggle">
         <div class="navbar-nav mr-auto">
           <a class="nav-item nav-link" href="{% url 'home' %}">Home</a>
-          <a class="nav-item nav-link" href="#">About</a>
+          <a class="nav-item nav-link" href="{% url 'todo-add' %}">Add Todo <span class="oi oi-plus"></span></a>
         </div>
         <!-- Navbar Right Side -->
-        <div class="navbar-nav">
-          <a class="nav-item nav-link" href="{% url 'todo-add' %}"><span class="oi oi-plus"></span></a>
-          <a class="nav-item nav-link" href="#"><span class="oi oi-bell"></span></a>
-        </div>
+        <!-- <div class="navbar-nav">
+        </div> -->
       </div>
+
+      <form method="GET" action="" class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search by todo title" name="title" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form>
     </div>
   </nav>
 </header>

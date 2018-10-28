@@ -44,8 +44,14 @@ INSTALLED_APPS = [
     'tastypie',
     'crispy_forms',
     'bootstrap_datepicker_plus',
-    'bootstrap4'
+    'bootstrap4',
+    'djcelery',
+    'django_celery_beat',
 ]
+
+# import djcelery
+# djcelery.setup_loader()
+# BORKER_URL = "django://"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
