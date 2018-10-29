@@ -50,6 +50,7 @@
             {% endif %}
 
             | Actions: <a href="{% url 'todo-update' task.id %}" class="edit-todo"><span class="oi oi-pencil"> Edit</span></a>
+            <a href="{% url 'todo-delete' task.id %}" class="delete-completed"><span class="io io-trash"> Delete</span></a>
             | <b>Due Date:</b> <span class="oi oi-calendar due-date"> {{task.due_date}}</span>
             </small>
             <br /><br />

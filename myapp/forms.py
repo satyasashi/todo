@@ -18,7 +18,7 @@ class TodoForm(forms.ModelForm):
     class Meta:
         model = Task
         fields = '__all__'
-        exclude = ['created_on', 'soft_del']
+        exclude = ['created_on', 'soft_del', 'soft_del_timestamp']
 
     # def __init__(self, *args, **kwargs):
     #     super(TodoForm, self).__init__(*args, **kwargs)

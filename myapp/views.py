@@ -3,11 +3,27 @@ from django.contrib import messages
 from celery import Celery
 from celery.schedules import crontab
 from .forms import TodoForm, ActionForm
+# from apscheduler.schedulers.background import BackgroundScheduler
+# from django_apscheduler.jobstores import DjangoJobStore
 from django.utils import timezone
 from .models import Task
 import datetime
+import schedule
 
-app=Celery()
+# scheduler = BackgroundScheduler()
+# scheduler.add_jobstore(DjangoJobStore(), 'djangojobstore')
+# app=Celery()
+
+def perm_delete(request):
+    delete_these = Task.objects.filter(soft_del=True)
+    today = timezone.now()
+    for del_item in delete_these:
+        if del_item.soft_del_timestamp:
+            if today.date() >= del_item.soft_del_timestamp.date():
+                del_item.delete()
+            else:
+                print("Not today")
+    return
 
 # Create your views here.
 def custom_filters(request):
@@ -37,8 +53,12 @@ def home(request):
         print(completed_tasks)
 
     filters=custom_filters(request)
-    task_alerts = alert_tasks(request)
+
     
+    task_alerts = alert_tasks(request)
+
+    perm_delete(request)
+
     if request.method == "GET":
         if request.GET.get('filter'):
             filter_arg = request.GET.get('filter')
@@ -83,10 +103,10 @@ def home(request):
 
 
     return render(request, 'myapp/home.html', 
-        context={'pending_tasks': pending_tasks, 'completed_tasks': completed_tasks, 'filters': filters})
+        context={'pending_tasks': pending_tasks, 'completed_tasks': completed_tasks, 'filters': filters, 'task_alerts': task_alerts})
 
 
-
+# @scheduler.scheduled_job("interval", seconds=30, id="alert")
 def alert_tasks(request):
     alert_pending_tasks = Task.objects.filter(status="Pending", due_date__date__lte=timezone.now())
     print("Alert pending tasks", alert_pending_tasks)
@@ -150,9 +170,8 @@ def todo_completed(request, pk):
 def todo_delete(request, pk):
     todo = get_object_or_404(Task, pk=pk)
     todo.soft_del = True
+    todo.soft_del_timestamp = timezone.now() + datetime.timedelta(days=30)
     todo.save()
-    permanent_delete = timezone.now() + datetime.timedelta(days=30)
-    today = timezone.now()
-    if today.date() >= permanent_delete.date():
-        todo.delete()
     return redirect('home')
+
+schedule.every(30).seconds.do(home)
