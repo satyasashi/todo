@@ -15,6 +15,8 @@ import schedule
 # app=Celery()
 
 def perm_delete(request):
+    '''Soft deleted To-dos are being filtered, and checked against the days.
+    If any of those are need to be deleted by today, then we Permanently delete them.'''
     delete_these = Task.objects.filter(soft_del=True)
     today = timezone.now()
     for del_item in delete_these:
@@ -31,6 +33,7 @@ def custom_filters(request):
     return filters
 
 def home(request):
+    '''We list all the pending tasks to the user on home page.'''
     try:
         pending_tasks = Task.objects.filter(status="Pending", soft_del=False).order_by('due_date')
         try:
@@ -51,15 +54,19 @@ def home(request):
     except:
         completed_tasks = None
         print(completed_tasks)
-
+    
+    # we call the custom_filters to get the list of 'filters' we use
     filters=custom_filters(request)
 
-    
+    # We call this when the page gets loaded. Usually this needs to be added to 
+    # Scheduled tasks / periodic tasks and run this Once every 30 Seconds.
     task_alerts = alert_tasks(request)
-
+    
+    # Calling this, checks if any 'soft deleted' To-dos need to be deleted permanently today.
     perm_delete(request)
 
     if request.method == "GET":
+        # Passing 'filter' to 'Home page' via GET request, we show only those filtered To-dos.
         if request.GET.get('filter'):
             filter_arg = request.GET.get('filter')
             from datetime import date
@@ -93,7 +100,8 @@ def home(request):
                 return redirect(reverse('home'))
 
         search_todos = ""
-
+        # Passing the 'title' via GET request, we show All the To-dos which has specific keyword in its "Title"
+        # Entered by the user in the 'Search Box' 
         if request.GET.get('title'):
             print("inside title")
             title_value = request.GET.get('title')
@@ -108,6 +116,9 @@ def home(request):
 
 # @scheduler.scheduled_job("interval", seconds=30, id="alert")
 def alert_tasks(request):
+    '''This function checks for Tasks/To-dos which are "Pending" and their alert_notification is near
+    and if yes, then it Shows "Alert" with Information in the Alert box on the right of web page.'''
+    
     alert_pending_tasks = Task.objects.filter(status="Pending", due_date__date__lte=timezone.now())
     print("Alert pending tasks", alert_pending_tasks)
 
@@ -133,6 +144,7 @@ def alert_tasks(request):
 
 
 def todo_add(request):
+    '''This gives users the option to Add a Todo.'''
     filters = custom_filters(request)
     task_alerts = alert_tasks(request)
     if request.method == "POST":
@@ -146,6 +158,7 @@ def todo_add(request):
     return render(request, 'myapp/add-todo.html', context={'form': form, 'filters':filters, 'task_alerts':task_alerts})
 
 def todo_update(request, pk):
+    '''This gives users the option to Update a Todo.'''
     todo = get_object_or_404(Task, pk=pk)
     filters = custom_filters(request)
     task_alerts = alert_tasks(request)
@@ -161,6 +174,7 @@ def todo_update(request, pk):
     return render(request, 'myapp/todo_update.html', context={'form': form, 'todo':todo, 'filters':filters, 'task_alerts':task_alerts})
 
 def todo_completed(request, pk):
+    '''This gives users the option to Mark a Todo as Completed.'''
     todo = get_object_or_404(Task, pk=pk)
     todo.status = "Completed"
     todo.save()
@@ -168,6 +182,8 @@ def todo_completed(request, pk):
 
 
 def todo_delete(request, pk):
+    '''This will not delete the Todo permanently from the database until it\'s been a Month
+    since the user deleted the Todo from the UI'''
     todo = get_object_or_404(Task, pk=pk)
     todo.soft_del = True
     todo.soft_del_timestamp = timezone.now() + datetime.timedelta(days=30)
