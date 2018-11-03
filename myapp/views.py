@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404, reverse
 from django.contrib import messages
+from django.urls import reverse
 from celery import Celery
 from celery.schedules import crontab
-from .forms import TodoForm, ActionForm
+from .forms import TodoForm, UpdateTodoForm, ActionForm
 # from apscheduler.schedulers.background import BackgroundScheduler
 # from django_apscheduler.jobstores import DjangoJobStore
 from django.utils import timezone
-from .models import Task
+from .models import Task, SubTask
 import datetime
 # import schedule
 
@@ -163,15 +164,16 @@ def todo_update(request, pk):
     filters = custom_filters(request)
     task_alerts = alert_tasks(request)
     if request.method == "POST":
-        form = TodoForm(request.POST, instance=todo)
+        form = UpdateTodoForm(request.POST, instance=todo)
 
         if form.is_valid():
             form.save()
             messages.add_message(request, messages.INFO, 'To-do Updated.')
             return redirect(reverse('home'))
     else:
-        form = TodoForm(instance=todo)
-    return render(request, 'myapp/todo_update.html', context={'form': form, 'todo':todo, 'filters':filters, 'task_alerts':task_alerts})
+        form = UpdateTodoForm(instance=todo)
+        subtasks = todo.subtask_set.all()
+    return render(request, 'myapp/todo_update.html', context={'form': form, 'todo':todo, 'subtasks': subtasks,'filters':filters, 'task_alerts':task_alerts})
 
 def todo_completed(request, pk):
     '''This gives users the option to Mark a Todo as Completed.'''
@@ -191,3 +193,12 @@ def todo_delete(request, pk):
     return redirect('home')
 
 # schedule.every(30).seconds.do(home)
+
+def subtask_delete(request, pk):
+    subtask = get_object_or_404(SubTask, pk=pk)
+    task_id = subtask.task.id
+    print("task_id is ", task_id)
+    subtask.delete()
+    print(reverse('todo-update', args=[task_id]))
+    return redirect(reverse('todo-update', args=[task_id]))
+    

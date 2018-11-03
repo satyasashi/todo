@@ -35,6 +35,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 
+.subtasks .subtasks-list-item {
+  list-style-type: none;
+  text-decoration: none;
+}
+
 /*.status-circle-pending {
     width: 100px;
     height: 100px;

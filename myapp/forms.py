@@ -12,7 +12,7 @@ STATUS = [('Pending','Pending'), ('Completed', 'Completed')]
 
 
 class TodoForm(forms.ModelForm):
-    sub_tasks = forms.CharField(label="Sub Tasks")
+    sub_tasks = forms.CharField(label="Sub Tasks", required=False)
     due_date = forms.DateTimeField(label="Due-Date format yyyy-mm-dd hh:mm", widget=DateTimePickerInput(format='%Y-%m-%d %H:%M'))
     notify_before = forms.IntegerField(label="Mention number of hours before 'Due-Date' time you want to get notified.")
     status = forms.ChoiceField(choices=STATUS, widget=forms.RadioSelect())
@@ -46,6 +46,31 @@ class TodoForm(forms.ModelForm):
     #     super(TodoForm, self).__init__(*args, **kwargs)
     #     self.fields['due_date'].widget = widgets.AdminDateWidget()
     #     self.fields['due_date'].widget.attrs.update({'id': 'datetimepicker'})
+
+
+class UpdateTodoForm(forms.ModelForm):
+    sub_tasks = forms.CharField(label="Sub Tasks", required=False)
+    due_date = forms.DateTimeField(label="Due-Date format yyyy-mm-dd hh:mm", widget=DateTimePickerInput(format='%Y-%m-%d %H:%M'))
+    notify_before = forms.IntegerField(label="Mention number of hours before 'Due-Date' time you want to get notified.")
+    status = forms.ChoiceField(choices=STATUS, widget=forms.RadioSelect())
+
+    def clean_sub_tasks(self):
+        sub_tasks = self.cleaned_data['sub_tasks']
+        print(sub_tasks)
+        return sub_tasks
+
+    def save(self):
+        result = Task.objects.get(title=self.cleaned_data['title'])
+        if result:
+            result2 = SubTask.objects.create(subtask_title=self.cleaned_data['sub_tasks'], task=result)
+            print("subtask saved")
+        return
+    
+    class Meta:
+        model = Task
+        fields = ['title', 'sub_tasks', 'description', 'due_date', 'notify_before', 'status']
+        exclude = ['created_on', 'soft_del', 'soft_del_timestamp']
+
 
 class ActionForm(forms.ModelForm):
     class Meta:
