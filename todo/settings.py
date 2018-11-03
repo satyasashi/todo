@@ -44,9 +44,6 @@ INSTALLED_APPS = [
     'crispy_forms',
     'bootstrap_datepicker_plus',
     'bootstrap4',
-    'djcelery',
-    'django_celery_beat',
-    'django_apscheduler',
 ]
 
 # import djcelery

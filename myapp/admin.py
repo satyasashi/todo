@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Task
+from .models import Task, SubTask
 
 
 # Register your models here.
@@ -13,3 +13,4 @@ class TaskAdmin(admin.ModelAdmin):
     date_hierarchy = 'created_on'
 
 admin.site.register(Task, TaskAdmin)
+admin.site.register(SubTask)

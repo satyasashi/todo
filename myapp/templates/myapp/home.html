@@ -1,15 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
+
 {% if pending_tasks %}
 <div class="content-section">
-    {% if pending_tasks == None %}
-    
-    <h2 class="text-center">Seems there are no Tasks in your bucket, please add a Todo</h2>
-
-    {% else %}
-        <h2 class="text-center">Things ToDo</h2>
-    {% endif %}
+    <h2 class="text-center">Things ToDo</h2>
     
     {% for task in pending_tasks %}
         <div class="todo-item mt-4" data-toggle="collapse" data-target="#demo{{task.id}}">
@@ -32,6 +27,10 @@
             </div>
         </div>
     {% endfor %}
+</div>
+{% else %}
+<div class="content-section">
+    <h2 class="text-center">Seems there are no Tasks in your bucket, please add a Todo</h2>
 </div>
 {% endif %}
 

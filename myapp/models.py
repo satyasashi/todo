@@ -4,6 +4,7 @@ import datetime
 # from datetime import date
 
 STATUS = [('Pending','Pending'), ('Completed', 'Completed')]
+DEFAULT_SUB_TASK=0
 
 # Create your models here.
 class Task(models.Model):
@@ -18,3 +19,11 @@ class Task(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class SubTask(models.Model):
+    subtask_title = models.CharField(max_length=100, blank=True, null=True, help_text="If you want to add optional sub-tasks you can do it here.")
+    task = models.ForeignKey(Task, default=DEFAULT_SUB_TASK, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.subtask_title

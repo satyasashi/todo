@@ -8,7 +8,7 @@ from .forms import TodoForm, ActionForm
 from django.utils import timezone
 from .models import Task
 import datetime
-import schedule
+# import schedule
 
 # scheduler = BackgroundScheduler()
 # scheduler.add_jobstore(DjangoJobStore(), 'djangojobstore')
@@ -190,4 +190,4 @@ def todo_delete(request, pk):
     todo.save()
     return redirect('home')
 
-schedule.every(30).seconds.do(home)
+# schedule.every(30).seconds.do(home)
