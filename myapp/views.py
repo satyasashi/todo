@@ -3,17 +3,16 @@ from django.contrib import messages
 from django.urls import reverse
 from celery import Celery
 from celery.schedules import crontab
-from .forms import TodoForm, UpdateTodoForm, ActionForm
+from .forms import TodoForm, ActionForm
 # from apscheduler.schedulers.background import BackgroundScheduler
 # from django_apscheduler.jobstores import DjangoJobStore
 from django.utils import timezone
 from .models import Task, SubTask
+from .tasks import alert_tasks
 import datetime
 # import schedule
 
 # scheduler = BackgroundScheduler()
-# scheduler.add_jobstore(DjangoJobStore(), 'djangojobstore')
-# app=Celery()
 
 def perm_delete(request):
     '''Soft deleted To-dos are being filtered, and checked against the days.
@@ -76,23 +75,29 @@ def home(request):
             total_week = 6
 
             if filter_arg.lower() == filters[0].lower():
-                filtered_tasks = Task.objects.filter(due_date=today, soft_del=False)
+                # Today
+                filtered_tasks = Task.objects.filter(due_date__date=today, soft_del=False)
                 return render(request, 'myapp/home.html', context={'filtered_tasks': filtered_tasks, 'filters': filters, 'filter_arg':filter_arg})
 
             elif filter_arg.lower() == filters[1].lower():
+                # This week
+                remaining_weekday = total_week - today_weekday
                 from_date = today-datetime.timedelta(today_weekday)
-                today_weekday = total_week - today_weekday
-                end_date = today+datetime.timedelta(today_weekday)
-                filtered_tasks = Task.objects.filter(due_date__gte=from_date, status="Pending", due_date__lte=end_date, soft_del=False)
+                end_date = today+datetime.timedelta(remaining_weekday)
+                filtered_tasks = Task.objects.filter(due_date__date__gte=from_date, status="Pending", due_date__date__lte=end_date, soft_del=False)
                 return render(request, 'myapp/home.html', context={'filtered_tasks': filtered_tasks, 'filters': filters, 'filter_arg':filter_arg})
 
             elif filter_arg.lower() == filters[2].lower():
-                today_weekday = total_week - today_weekday
-                from_date = today+datetime.timedelta(today_weekday)
-                filtered_tasks = Task.objects.filter(due_date__gt=from_date, status="Pending", soft_del=False)
+                # Next week
+                remaining_weekday = total_week - today_weekday
+                from_date = today+datetime.timedelta(remaining_weekday+1)
+                end_weekday = total_week - from_date.weekday()
+                end_date = from_date+datetime.timedelta(end_weekday)
+                filtered_tasks = Task.objects.filter(due_date__date__gte=from_date, due_date__date__lte=end_date, status="Pending", soft_del=False)
                 return render(request, 'myapp/home.html', context={'filtered_tasks': filtered_tasks, 'filters': filters, 'filter_arg':filter_arg})
 
             elif filter_arg.lower() == filters[3].lower():
+                # Over due
                 filtered_tasks = Task.objects.filter(due_date__lt=today, status="Pending", soft_del=False)
                 return render(request, 'myapp/home.html', context={'filtered_tasks': filtered_tasks, 'filters': filters, 'filter_arg':filter_arg})
 
@@ -116,32 +121,32 @@ def home(request):
 
 
 # @scheduler.scheduled_job("interval", seconds=30, id="alert")
-def alert_tasks(request):
-    '''This function checks for Tasks/To-dos which are "Pending" and their alert_notification is near
-    and if yes, then it Shows "Alert" with Information in the Alert box on the right of web page.'''
+# def alert_tasks(request):
+#     '''This function checks for Tasks/To-dos which are "Pending" and their alert_notification is near
+#     and if yes, then it Shows "Alert" with Information in the Alert box on the right of web page.'''
     
-    alert_pending_tasks = Task.objects.filter(status="Pending", due_date__date__lte=timezone.now())
-    print("Alert pending tasks", alert_pending_tasks)
+#     alert_pending_tasks = Task.objects.filter(status="Pending", due_date__date__lte=timezone.now())
+#     print("Alert pending tasks", alert_pending_tasks)
 
-    task_alerts = []
+#     task_alerts = []
 
-    for task in alert_pending_tasks:
-        print("Inside task_alerts loop")
-        print(task.due_date)
-        present = timezone.localtime(timezone.now())
-        present_hour = present.hour
-        present_minute = present.minute
-        alert_task_time = timezone.localtime(task.due_date-datetime.timedelta(hours=task.notify_before))
-        alert_task_hour = alert_task_time.hour
-        alert_task_minute = alert_task_time.minute
+#     for task in alert_pending_tasks:
+#         print("Inside task_alerts loop")
+#         print(task.due_date)
+#         present = timezone.localtime(timezone.now())
+#         present_hour = present.hour
+#         present_minute = present.minute
+#         alert_task_time = timezone.localtime(task.due_date-datetime.timedelta(hours=task.notify_before))
+#         alert_task_hour = alert_task_time.hour
+#         alert_task_minute = alert_task_time.minute
 
-        if present_hour == alert_task_hour and present_minute == alert_task_minute:
-            print("Inside if statement in task_alerts")
-            task_alerts.append(task)
-            print("Appended ", task)
-    print(task_alerts)
+#         if present_hour == alert_task_hour and present_minute == alert_task_minute:
+#             print("Inside if statement in task_alerts")
+#             task_alerts.append(task)
+#             print("Appended ", task)
+#     print(task_alerts)
 
-    return task_alerts
+#     return task_alerts
 
 
 def todo_add(request):
@@ -164,14 +169,14 @@ def todo_update(request, pk):
     filters = custom_filters(request)
     task_alerts = alert_tasks(request)
     if request.method == "POST":
-        form = UpdateTodoForm(request.POST, instance=todo)
+        form = TodoForm(request.POST, instance=todo)
 
         if form.is_valid():
             form.save()
             messages.add_message(request, messages.INFO, 'To-do Updated.')
             return redirect(reverse('home'))
     else:
-        form = UpdateTodoForm(instance=todo)
+        form = TodoForm(instance=todo)
         subtasks = todo.subtask_set.all()
     return render(request, 'myapp/todo_update.html', context={'form': form, 'todo':todo, 'subtasks': subtasks,'filters':filters, 'task_alerts':task_alerts})
 

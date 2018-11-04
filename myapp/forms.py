@@ -23,7 +23,7 @@ class TodoForm(forms.ModelForm):
         return sub_tasks
 
     def save(self):
-        result = Task.objects.create(
+        result, created = Task.objects.get_or_create(
             title = self.cleaned_data['title'],
             description = self.cleaned_data['description'],
             due_date = self.cleaned_data['due_date'],
@@ -31,9 +31,11 @@ class TodoForm(forms.ModelForm):
             status = self.cleaned_data['status']
             )    
         print("todo created")
-        if result:
-            result2 = SubTask.objects.create(subtask_title=self.cleaned_data['sub_tasks'], task=result)
-            print("subtask saved")
+        subtask = self.cleaned_data['sub_tasks']
+        if len(subtask) > 0:
+            if created:
+                result2 = SubTask.objects.create(subtask_title=self.cleaned_data['sub_tasks'], task=result)
+                print("subtask saved")
         return
 
 
@@ -48,28 +50,30 @@ class TodoForm(forms.ModelForm):
     #     self.fields['due_date'].widget.attrs.update({'id': 'datetimepicker'})
 
 
-class UpdateTodoForm(forms.ModelForm):
-    sub_tasks = forms.CharField(label="Sub Tasks", required=False)
-    due_date = forms.DateTimeField(label="Due-Date format yyyy-mm-dd hh:mm", widget=DateTimePickerInput(format='%Y-%m-%d %H:%M'))
-    notify_before = forms.IntegerField(label="Mention number of hours before 'Due-Date' time you want to get notified.")
-    status = forms.ChoiceField(choices=STATUS, widget=forms.RadioSelect())
+# class UpdateTodoForm(forms.ModelForm):
+#     sub_tasks = forms.CharField(label="Sub Tasks", required=False)
+#     due_date = forms.DateTimeField(label="Due-Date format yyyy-mm-dd hh:mm", widget=DateTimePickerInput(format='%Y-%m-%d %H:%M'))
+#     notify_before = forms.IntegerField(label="Mention number of hours before 'Due-Date' time you want to get notified.")
+#     status = forms.ChoiceField(choices=STATUS, widget=forms.RadioSelect())
 
-    def clean_sub_tasks(self):
-        sub_tasks = self.cleaned_data['sub_tasks']
-        print(sub_tasks)
-        return sub_tasks
+#     def clean_sub_tasks(self):
+#         sub_tasks = self.cleaned_data['sub_tasks']
+#         print(sub_tasks)
+#         return sub_tasks
 
-    def save(self):
-        result = Task.objects.get(title=self.cleaned_data['title'])
-        if result:
-            result2 = SubTask.objects.create(subtask_title=self.cleaned_data['sub_tasks'], task=result)
-            print("subtask saved")
-        return
+#     def save(self):
+#         result = Task.objects.get(title=self.cleaned_data['title'])
+#         subtask = self.cleaned_data['sub_tasks']
+#         if len(subtask) > 0:
+#             if result:
+#                 result2 = SubTask.objects.create(subtask_title=subtask, task=result)
+#                 print("subtask saved")
+#         return
     
-    class Meta:
-        model = Task
-        fields = ['title', 'sub_tasks', 'description', 'due_date', 'notify_before', 'status']
-        exclude = ['created_on', 'soft_del', 'soft_del_timestamp']
+#     class Meta:
+#         model = Task
+#         fields = ['title', 'sub_tasks', 'description', 'due_date', 'notify_before', 'status']
+#         exclude = ['created_on', 'soft_del', 'soft_del_timestamp']
 
 
 class ActionForm(forms.ModelForm):
