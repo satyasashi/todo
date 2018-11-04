@@ -19,6 +19,7 @@ python-crontab==2.3.5
 python-dateutil==2.7.3
 python-mimeparse==1.6.0
 pytz==2018.5
+redis==2.10.6
 six==1.11.0
 vine==1.1.4
 whitenoise==3.3.1

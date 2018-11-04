@@ -9,7 +9,7 @@ def alert_tasks(request):
     '''This function checks for Tasks/To-dos which are "Pending" and their alert_notification is near
     and if yes, then it Shows "Alert" with Information in the Alert box on the right of web page.'''
     
-    alert_pending_tasks = Task.objects.filter(status="Pending", due_date__date__lte=timezone.now())
+    alert_pending_tasks = Task.objects.filter(status="Pending", due_date__lte=timezone.now())
     print("Alert pending tasks", alert_pending_tasks)
 
     task_alerts = []

@@ -23,7 +23,7 @@ class TodoForm(forms.ModelForm):
         return sub_tasks
 
     def save(self):
-        result, created = Task.objects.get_or_create(
+        result = Task.objects.create(
             title = self.cleaned_data['title'],
             description = self.cleaned_data['description'],
             due_date = self.cleaned_data['due_date'],
@@ -38,6 +38,21 @@ class TodoForm(forms.ModelForm):
                 print("subtask saved")
         return
 
+
+    def update_save(self, pk):
+        result = Task.objects.get(id=pk)
+        result.title = self.cleaned_data['title']
+        result.description = self.cleaned_data['description']
+        result.due_date = self.cleaned_data['due_date']
+        result.notify_before = self.cleaned_data['notify_before']
+        result.status = self.cleaned_data['status']
+        result.save()
+        subtask = self.cleaned_data['sub_tasks']
+        if len(subtask) > 0:
+            if result:
+                result2 = SubTask.objects.create(subtask_title=self.cleaned_data['sub_tasks'], task=result)
+                print("subtask saved")
+        return
 
     class Meta:
         model = Task

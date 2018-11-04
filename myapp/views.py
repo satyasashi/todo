@@ -77,7 +77,7 @@ def home(request):
             if filter_arg.lower() == filters[0].lower():
                 # Today
                 filtered_tasks = Task.objects.filter(due_date__date=today, soft_del=False)
-                return render(request, 'myapp/home.html', context={'filtered_tasks': filtered_tasks, 'filters': filters, 'filter_arg':filter_arg})
+                return render(request, 'myapp/filtered_tasks.html', context={'filtered_tasks': filtered_tasks, 'filters': filters, 'filter_arg':filter_arg})
 
             elif filter_arg.lower() == filters[1].lower():
                 # This week
@@ -85,7 +85,7 @@ def home(request):
                 from_date = today-datetime.timedelta(today_weekday)
                 end_date = today+datetime.timedelta(remaining_weekday)
                 filtered_tasks = Task.objects.filter(due_date__date__gte=from_date, status="Pending", due_date__date__lte=end_date, soft_del=False)
-                return render(request, 'myapp/home.html', context={'filtered_tasks': filtered_tasks, 'filters': filters, 'filter_arg':filter_arg})
+                return render(request, 'myapp/filtered_tasks.html', context={'filtered_tasks': filtered_tasks, 'filters': filters, 'filter_arg':filter_arg})
 
             elif filter_arg.lower() == filters[2].lower():
                 # Next week
@@ -94,12 +94,12 @@ def home(request):
                 end_weekday = total_week - from_date.weekday()
                 end_date = from_date+datetime.timedelta(end_weekday)
                 filtered_tasks = Task.objects.filter(due_date__date__gte=from_date, due_date__date__lte=end_date, status="Pending", soft_del=False)
-                return render(request, 'myapp/home.html', context={'filtered_tasks': filtered_tasks, 'filters': filters, 'filter_arg':filter_arg})
+                return render(request, 'myapp/filtered_tasks.html', context={'filtered_tasks': filtered_tasks, 'filters': filters, 'filter_arg':filter_arg})
 
             elif filter_arg.lower() == filters[3].lower():
                 # Over due
                 filtered_tasks = Task.objects.filter(due_date__lt=today, status="Pending", soft_del=False)
-                return render(request, 'myapp/home.html', context={'filtered_tasks': filtered_tasks, 'filters': filters, 'filter_arg':filter_arg})
+                return render(request, 'myapp/filtered_tasks.html', context={'filtered_tasks': filtered_tasks, 'filters': filters, 'filter_arg':filter_arg})
 
             else:
                 messages.add_message(request, messages.INFO, 'Filter unavailable please come back later')
@@ -172,7 +172,7 @@ def todo_update(request, pk):
         form = TodoForm(request.POST, instance=todo)
 
         if form.is_valid():
-            form.save()
+            form.update_save(pk=pk)
             messages.add_message(request, messages.INFO, 'To-do Updated.')
             return redirect(reverse('home'))
     else:
