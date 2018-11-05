@@ -1,6 +1,7 @@
+import datetime
 from django.db import models
 # from django.utils import timezone
-import datetime
+from django.core.validators import MaxValueValidator, MinValueValidator
 # from datetime import date
 
 STATUS = [('Pending','Pending'), ('Completed', 'Completed')]
@@ -12,7 +13,8 @@ class Task(models.Model):
     description = models.TextField()
     created_on = models.DateField(default=datetime.date.today)
     due_date = models.DateTimeField(help_text="Date format yyyy-mm-dd")
-    notify_before = models.IntegerField(null=True, default=1, help_text="Mention number of hours before 'Due-Date' you want to get notified. Default is 1 hour")
+    notify_before = models.IntegerField(null=True, default=1, help_text="Mention number of hours before 'Due-Date' you want to get notified. Default is 1 hour",
+     validators=[MinValueValidator(1)])
     status = models.CharField(max_length=20, choices=STATUS, help_text="Choose either Pending or Completed for status", default=STATUS[0][0])
     soft_del = models.BooleanField(blank=True, default=False)
     soft_del_timestamp = models.DateTimeField(null=True)

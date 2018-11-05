@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404, reverse
+from django.core.exceptions import ValidationError
 from django.contrib import messages
 from django.urls import reverse
 from celery import Celery
@@ -96,9 +97,11 @@ def home(request):
         if request.GET.get('title'):
             print("inside title")
             title_value = request.GET.get('title')
-            search_todos = get_list_or_404(Task, title__icontains=str(title_value))
+            if not title_value:
+                return redirect('home')
+            search_todos = get_list_or_404(Task, title__icontains=str(title_value), soft_del=False)
             print("search_todos is ", search_todos)
-            return render(request, 'myapp/home.html', context={'search_todos':search_todos, 'title_value': title_value, 'filters':filters, 'task_alerts':task_alerts})
+            return render(request, 'myapp/search_results.html', context={'search_todos':search_todos, 'title_value': title_value, 'filters':filters, 'task_alerts':task_alerts})
 
 
     return render(request, 'myapp/home.html', 

@@ -2,6 +2,7 @@ from django.contrib.admin import widgets
 from django.conf import settings
 from django import forms
 from bootstrap_datepicker_plus import DateTimePickerInput
+from django.core.exceptions import ValidationError
 from .models import Task, SubTask
 import datetime
 
@@ -21,6 +22,12 @@ class TodoForm(forms.ModelForm):
         sub_tasks = self.cleaned_data['sub_tasks']
         print(sub_tasks)
         return sub_tasks
+
+    def clean_notify_before(self):
+        notify_before = self.cleaned_data['notify_before']
+        if notify_before < 1:
+            notify_before = 1
+        return notify_before
 
     def save(self):
         result = Task.objects.create(

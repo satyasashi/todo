@@ -49,40 +49,12 @@
             {% endif %}
 
             | Actions: <a href="{% url 'todo-update' task.id %}" class="edit-todo"><span class="oi oi-pencil"> Edit</span></a>
-            <a href="{% url 'todo-delete' task.id %}" class="delete-completed"><span class="io io-trash"> Delete</span></a>
+            <a href="{% url 'todo-delete' task.id %}" class="delete-completed"><span class="oi oi-trash"> Delete</span></a>
             | <b>Due Date:</b> <span class="oi oi-calendar due-date"> {{task.due_date}}</span>
             </small>
             <br /><br />
             <div id="demo{{task.id}}" class="collapse">
                 <p>{{task.description}}</p>
-            </div>
-        </div>
-    {% endfor %}
-</div>
-{% endif %}
-
-
-{% if search_todos %}
-<div class="content-section">
-    <h2 class="text-center">Results for title '{{title_value}}'</h2>
-    {% for search_todo in search_todos %}
-        <div class="todo-item mt-4" data-toggle="collapse" data-target="#demo{{search_todo.id}}">
-            <h2 class="task-heading">{{search_todo}}</h2> <div class="status-div"></div>
-            <small>
-            Status:
-            {% if search_todo.status == "Pending" %}
-            <span class="{% if search_todo.status %}status-pending{% endif %}">Pending</span> 
-            {% else %}
-            <span class="{% if search_todo.status %}status-completed{% endif %}">Completed</span> 
-            {% endif %}
-
-            | Actions: <a href="{% url 'todo-update' search_todo.id %}" class="edit-todo"><span class="oi oi-pencil"> Edit</span></a>
-            <a href="{% url 'todo-completed' search_todo.id %}" class="mark-todo"><span class="oi oi-check"> Mark as completed</span></a>
-            | <b>Due Date:</b> <span class="oi oi-calendar due-date"> {{search_todo.due_date}}</span>
-            </small>
-            <br /><br />
-            <div id="demo{{search_todo.id}}" class="collapse">
-                <p>{{search_todo.description}}</p>
             </div>
         </div>
     {% endfor %}
