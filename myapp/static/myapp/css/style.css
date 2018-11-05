@@ -112,6 +112,11 @@ ul {
   text-decoration: none;
 }
 
+.list-group .alert-delete-link {
+  text-decoration: none;
+  color
+}
+
 .list-group .filter-item-links .list-group-item:hover {
   background-color: rgba(35, 158, 239, 0.5);
   color: #000;

@@ -4,7 +4,18 @@
     <ul class="list-group">
         {% if task_alerts %}
             {% for task in task_alerts %}
-              <a href="{% url 'todo-update' task.id %}" class="filter-item-links"><li class="alert-list-item alert alert-danger fade-in">Your task '{{task}}' is about to reach dead line in {{task.notify_me}} Hour(s)</li></a>
+              {% if task.task.soft_del == False %}
+                <li class="alert-list-item alert alert-danger fade-in alert-dismissable" role="alert">Your task <b>'{{task}}'</b> is about to reach dead line in 
+                <b>{{task.task.notify_before}} Hour {{task.notify_before|pluralize}}</b>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="{% url 'todo-update' task.task.id %}" style="color: #C05532;">
+                  <span class="oi oi-eye"></span>
+                </a>&nbsp;&nbsp;
+                <a href="{% url 'alert-task-delete' task.id %}" class="alert-delete-link" style="color: #C05532;">
+                  <span class="oi oi-trash"></span>
+                </a>
+                </li>
+                {% endif %}
             {% endfor %}
         {% endif %}
     </ul>

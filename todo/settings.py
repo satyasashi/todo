@@ -137,10 +137,14 @@ USE_TZ = True
 CELERY_BROKER_URL = 'redis://localhost:6379'
 CELERY_TIMEZONE = 'Asia/Kolkata'
 CELERY_BEAT_SCHEDULE = {
-    'alert-every-30-sec': {
+    'alert-every-25-sec': {
         'task': 'alert_tasks',
-        'schedule': 30.0,
+        'schedule': 25.0,
         'args': ('request',)
+    },
+    'check-to-delete-task-everyday': {
+        'task': 'permanent-delete-task',
+        'schedule': crontab(hour=23)
     }
 }
 

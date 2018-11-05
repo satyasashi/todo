@@ -61,31 +61,6 @@
 </div>
 {% endif %}
 
-{% if filtered_tasks %}
-<div class="content-section">
-    <h2>Filtered Tasks for '{{filter_arg}}'</h2>
-    {% for filtered_task in filtered_tasks %}
-        <div class="todo-item mt-4 data-toggle="collapse" data-target="#demo{{filtered_task.id}}">
-            <h2 class="task-heading">{{filtered_task}}</h2> 
-            <small>
-            Status:
-            {% if filtered_task == "Completed" %}
-            <span class="{% if filtered_task.status %}status-completed{% endif %}">Completed</span> 
-            {% else %}
-            <span class="{% if filtered_task.status %}status-pending{% endif %}">Pending</span> 
-            {% endif %}
-
-            | Actions: <a href="{% url 'todo-update' filtered_task.id %}" class="edit-todo"><span class="oi oi-pencil"> Edit</span></a>
-            | <b>Due Date:</b> <span class="oi oi-calendar due-date"> {{filtered_task.due_date}}</span>
-            </small>
-            <br /><br />
-            <div id="demo{{filtered_task.id}}" class="collapse">
-                <p>{{filtered_task.description}}</p>
-            </div>
-        </div>
-    {% endfor %}
-</div>
-{% endif %}
 
 {% if search_todos %}
 <div class="content-section">

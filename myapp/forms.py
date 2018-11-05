@@ -14,7 +14,7 @@ STATUS = [('Pending','Pending'), ('Completed', 'Completed')]
 class TodoForm(forms.ModelForm):
     sub_tasks = forms.CharField(label="Sub Tasks", required=False)
     due_date = forms.DateTimeField(label="Due-Date format yyyy-mm-dd hh:mm", widget=DateTimePickerInput(format='%Y-%m-%d %H:%M'))
-    notify_before = forms.IntegerField(label="Mention number of hours before 'Due-Date' time you want to get notified.")
+    notify_before = forms.IntegerField(initial=1, label="Mention number of hours before 'Due-Date' time you want to get notified.")
     status = forms.ChoiceField(choices=STATUS, widget=forms.RadioSelect())
 
     def clean_sub_tasks(self):

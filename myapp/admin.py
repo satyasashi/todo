@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Task, SubTask
+from .models import Task, SubTask, AlertTask
 
 
 # Register your models here.
@@ -14,3 +14,4 @@ class TaskAdmin(admin.ModelAdmin):
 
 admin.site.register(Task, TaskAdmin)
 admin.site.register(SubTask)
+admin.site.register(AlertTask)
