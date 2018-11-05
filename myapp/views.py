@@ -5,15 +5,10 @@ from django.urls import reverse
 from celery import Celery
 from celery.schedules import crontab
 from .forms import TodoForm, ActionForm
-# from apscheduler.schedulers.background import BackgroundScheduler
-# from django_apscheduler.jobstores import DjangoJobStore
 from django.utils import timezone
 from .models import Task, SubTask, AlertTask
 from .tasks import alert_tasks
 import datetime
-# import schedule
-
-
 
 # Create your views here.
 def custom_filters(request):
@@ -48,7 +43,6 @@ def home(request):
 
     # We call this when the page gets loaded. Usually this needs to be added to 
     # Scheduled tasks / periodic tasks and run this Once every 30 Seconds.
-    # task_alerts = alert_tasks(request)
     task_alerts = AlertTask.objects.all()
 
     if request.method == "GET":
@@ -107,36 +101,6 @@ def home(request):
     return render(request, 'myapp/home.html', 
         context={'pending_tasks': pending_tasks, 'completed_tasks': completed_tasks, 'filters': filters, 'task_alerts': task_alerts})
 
-
-# @scheduler.scheduled_job("interval", seconds=30, id="alert")
-# def alert_tasks(request):
-#     '''This function checks for Tasks/To-dos which are "Pending" and their alert_notification is near
-#     and if yes, then it Shows "Alert" with Information in the Alert box on the right of web page.'''
-    
-#     alert_pending_tasks = Task.objects.filter(status="Pending", due_date__date__lte=timezone.now())
-#     print("Alert pending tasks", alert_pending_tasks)
-
-#     task_alerts = []
-
-#     for task in alert_pending_tasks:
-#         print("Inside task_alerts loop")
-#         print(task.due_date)
-#         present = timezone.localtime(timezone.now())
-#         present_hour = present.hour
-#         present_minute = present.minute
-#         alert_task_time = timezone.localtime(task.due_date-datetime.timedelta(hours=task.notify_before))
-#         alert_task_hour = alert_task_time.hour
-#         alert_task_minute = alert_task_time.minute
-
-#         if present_hour == alert_task_hour and present_minute == alert_task_minute:
-#             print("Inside if statement in task_alerts")
-#             task_alerts.append(task)
-#             print("Appended ", task)
-#     print(task_alerts)
-
-#     return task_alerts
-
-
 def todo_add(request):
     '''This gives users the option to Add a Todo.'''
     filters = custom_filters(request)
@@ -185,8 +149,6 @@ def todo_delete(request, pk):
     todo.save()
     return redirect('home')
 
-# schedule.every(30).seconds.do(home)
-
 def subtask_delete(request, pk):
     subtask = get_object_or_404(SubTask, pk=pk)
     task_id = subtask.task.id
@@ -194,7 +156,6 @@ def subtask_delete(request, pk):
     subtask.delete()
     print(reverse('todo-update', args=[task_id]))
     return redirect(reverse('todo-update', args=[task_id]))
-
 
 # alert task delete
 def alert_task_delete(request, pk):
